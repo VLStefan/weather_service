@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -12,5 +13,3 @@ DB_URI = os.getenv("DB_URL")
 ACCUWEATHER_TOKEN = os.getenv("ACCUWEATHER_TOKEN")
 
 WEATHERSTACK_TOKEN = os.getenv("WEATHERSTACK_TOKEN")
-
-

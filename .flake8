@@ -1,0 +1,19 @@
+[flake8]
+max-line-length = 159
+max-complexity = 12
+# B = bugbear
+# B9 = bugbear opinionated (incl line length)
+select = C,E,F,W,B,B9
+# E203: whitespace before ':' (black behaviour)
+# E501: flake8 line length (covered by bugbear B950)
+# W503: line break before binary operator (black behaviour)
+# B902: Invalid first argument 'cls' used for instance method (abstract classmethods are not really instance methods)
+# B904: Within an except clause, raise exceptions with raise ... from err or raise ... from None to distinguish them from errors in exception handling
+ignore = E203,E501,W503,B902,B904
+exclude =
+  ./.git
+  ./.mypy_cache
+  ./config
+  ./docs
+  .eggs/
+  ./requirements

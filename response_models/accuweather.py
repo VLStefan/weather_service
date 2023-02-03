@@ -1,6 +1,7 @@
-from typing import List, Dict, Any
+from typing import Any, Dict
 
 from pydantic import BaseModel
+
 
 class AccuWeather(BaseModel):
     Date: str

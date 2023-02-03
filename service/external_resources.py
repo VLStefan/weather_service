@@ -1,10 +1,7 @@
-import time
-from typing import Any, Coroutine, Dict, List, Union
+from typing import Any
 
-from fastapi import status
 from fastapi.exceptions import HTTPException
 from httpx import AsyncClient, HTTPError, HTTPStatusError
-from config import ACCUWEATHER_TOKEN
 
 
 class ExternalService:
@@ -23,7 +20,7 @@ class ExternalService:
         endpoint: str,
     ) -> Any:
         result = {}
-        
+
         async with AsyncClient() as client:
             try:
                 response = await client.request(

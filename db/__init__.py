@@ -1,5 +1,5 @@
-from .base import database, engine, metadata
-from .models import user, city
+from .base import database, engine, metadata  # type: ignore
+from .models import city, user  # type: ignore
 
 __all__ = [
     "database",
@@ -8,4 +8,3 @@ __all__ = [
     "user",
     "city",
 ]
-

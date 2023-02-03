@@ -1,12 +1,12 @@
 import datetime
 from typing import Any, Optional
+
 from sqlalchemy import insert
 
-from db import database, city
-
+from db import city, database
 from service.accuweather_service import AccuWeatherService
-from service.weatherstack_service import WeatherStackService
 from service.local_resources import WeatherDataService
+from service.weatherstack_service import WeatherStackService
 
 
 async def check_and_update_cities() -> None:
@@ -20,7 +20,7 @@ async def check_and_update_cities() -> None:
 async def update_cities() -> None:
     external_api = AccuWeatherService()
 
-    cities_data = (await external_api.fetch_top_cities())
+    cities_data = await external_api.fetch_top_cities()
 
     await database.connect()
 
@@ -71,12 +71,20 @@ async def get_current_weather_forecast_for_city(city_name: str) -> Any:
 
 
 async def get_history_weather_forecast_for_city(
-        city_name: str, day: Optional[int], month: Optional[int], year: Optional[int], number_of_days: int
+    city_name: str,
+    day: Optional[int],
+    month: Optional[int],
+    year: Optional[int],
+    number_of_days: int,
 ) -> Any:
     external_api = WeatherStackService()
     forecast_data = {}
     today = datetime.date.today()
-    date = datetime.date(day=day or today.day, month=month or today.month, year=year or today.year)
+    date = datetime.date(
+        day=day or today.day,
+        month=month or today.month,
+        year=year or today.year,
+    )
     days = [str(date + datetime.timedelta(days=number)) for number in range(number_of_days)]
 
     forecast_response = await external_api.fetch_historical_forecast(city=city_name, dates=days)
@@ -85,4 +93,3 @@ async def get_history_weather_forecast_for_city(
     forecast_data["location"] = forecast_response.get("location", {})
 
     return forecast_data
-

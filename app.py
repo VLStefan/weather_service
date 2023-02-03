@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from db import database
 from routes import base_router
 
@@ -18,10 +19,8 @@ async def startup() -> None:
 async def shutdown() -> None:
     await database.disconnect()
 
+
 if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, port=8082)
-
-
-
