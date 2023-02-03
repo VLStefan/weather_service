@@ -4,7 +4,7 @@ from typing import Any, Coroutine, Dict, List, Union
 from fastapi import status
 from fastapi.exceptions import HTTPException
 from httpx import AsyncClient, HTTPError, HTTPStatusError
-from config import API_TOKEN
+from config import ACCUWEATHER_TOKEN
 
 
 class AccuWeatherService:
@@ -55,7 +55,7 @@ class AccuWeatherService:
     async def city_search(
         self, city: str
     ) -> Dict[str, Any]:
-        endpoint = f"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={API_TOKEN}&q=city{city}"
+        endpoint = f"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={ACCUWEATHER_TOKEN}&q=city{city}"
         response = await self._request(
             method="GET", endpoint=endpoint
         )
@@ -65,7 +65,7 @@ class AccuWeatherService:
     async def fetch_top_cities(
         self
     ) -> List[Dict[str, Any]]:
-        endpoint = f"http://dataservice.accuweather.com/locations/v1/topcities/150?apikey={API_TOKEN}"
+        endpoint = f"http://dataservice.accuweather.com/locations/v1/topcities/150?apikey={ACCUWEATHER_TOKEN}"
         response = await self._request(
             method="GET", endpoint=endpoint
         )
@@ -74,7 +74,7 @@ class AccuWeatherService:
     async def fetch_5_days_forecast(
         self, city_id: str
     ) -> List[Dict[str, Any]]:
-        endpoint = f"http://dataservice.accuweather.com/forecasts/v1/daily/5day/{city_id}?apikey={API_TOKEN}"
+        endpoint = f"http://dataservice.accuweather.com/forecasts/v1/daily/5day/{city_id}?apikey={ACCUWEATHER_TOKEN}"
         response = await self._request(
             method="GET", endpoint=endpoint
         )

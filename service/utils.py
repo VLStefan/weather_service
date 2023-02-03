@@ -1,8 +1,9 @@
-from typing import Any
+from typing import Any, Dict, List, Optional, Type, Union
 from sqlalchemy import insert
-from service.external import AccuWeatherService
+from service.accuweather_service import AccuWeatherService
 from service.local_resources import WeatherDataService
 from db import database, city
+from pydantic import BaseModel
 
 
 async def check_and_update_cities() -> None:
@@ -48,7 +49,19 @@ async def get_weather_forecast_for_city(city_name: str) -> Any:
 
     city_id = city_obj.get("city_id", "")
 
-    forecast = await external_api.fetch_5_days_forecast(city_id=city_id)
+    forecast_response = await external_api.fetch_5_days_forecast(city_id=city_id)
 
-    print(forecast)
+    forecast_data = forecast_response.get("DailyForecasts")
 
+    return forecast_data
+
+def _prepare_obj(
+    record: Dict[str, Any], data_model: Type[BaseModel]
+) -> Optional[Dict[str, Any]]:
+    return data_model.parse_obj(record).dict() if record else None
+
+
+def _prepare_list(
+    query_result: List[Dict[str, Any]], data_model: Type[BaseModel],
+) -> List[Optional[Dict[str, Any]]]:
+    return [_prepare_obj(record, data_model) for record in query_result] if query_result else query_result
