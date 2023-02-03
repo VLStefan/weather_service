@@ -22,7 +22,6 @@ check:
 
 
 # Helpers
-
 clean:
 	@find ${PROJECT_NAME}/ -name '*.pyc' -exec rm -f {} \;
 	@find ${PROJECT_NAME}/ -name '__pycache__' -exec rm -rf {} \;
