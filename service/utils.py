@@ -51,7 +51,7 @@ async def get_weather_forecast_for_city(city_name: str) -> Any:
 
     forecast_response = await external_api.fetch_5_days_forecast(city_id=city_id)
 
-    forecast_data = forecast_response.get("DailyForecasts")
+    forecast_data = forecast_response.get("DailyForecasts", [])
 
     return forecast_data
 

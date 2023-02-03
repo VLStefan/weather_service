@@ -73,7 +73,7 @@ class AccuWeatherService:
 
     async def fetch_5_days_forecast(
         self, city_id: str
-    ) -> List[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         endpoint = f"http://dataservice.accuweather.com/forecasts/v1/daily/5day/{city_id}?apikey={ACCUWEATHER_TOKEN}"
         response = await self._request(
             method="GET", endpoint=endpoint
