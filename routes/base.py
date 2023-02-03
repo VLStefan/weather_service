@@ -1,8 +1,9 @@
-from typing import Optional
+from typing import Optional, List, Dict
 
 import asyncio
 from fastapi import APIRouter
 
+from response_models import accuweather, weatherstack
 from provider.data_provider import (
     check_and_update_cities,
     get_weather_forecast_for_city,
@@ -25,7 +26,8 @@ def root():
 
 @base_router.get(
     "/current/{city_name}",
-    summary="Get  current weather forecast by city"
+    summary="Get  current weather forecast by city",
+    response_model=weatherstack.CurrentWeatherResponse
 )
 async def current_weather(city_name: str):
     response = await get_current_weather_forecast_for_city(city_name=city_name)
@@ -35,7 +37,8 @@ async def current_weather(city_name: str):
 
 @base_router.get(
     "/{city_name}",
-    summary="Get weather forecast by city for a 5 days"
+    summary="Get weather forecast by city for a 5 days",
+    response_model=List[accuweather.AccuWeather]
 )
 async def weather_forecast(city_name: str):
     response = await get_weather_forecast_for_city(city_name=city_name)
