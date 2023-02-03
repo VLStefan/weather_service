@@ -82,3 +82,4 @@ async def get_history_weather_forecast_for_city(
     forecast_data = forecast_response.get("historical", {})
 
     return forecast_data
+
