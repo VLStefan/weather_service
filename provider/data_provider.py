@@ -89,7 +89,7 @@ async def get_history_weather_forecast_for_city(
 
     forecast_response = await external_api.fetch_historical_forecast(city=city_name, dates=days)
 
-    forecast_data["historical"] = forecast_response.get("historical", {})
     forecast_data["location"] = forecast_response.get("location", {})
+    forecast_data["historical"] = forecast_response.get("historical", {})
 
     return forecast_data
