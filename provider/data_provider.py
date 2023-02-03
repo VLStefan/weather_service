@@ -1,5 +1,6 @@
 import datetime
 from typing import Any, Optional
+from collections import defaultdict
 
 from sqlalchemy import insert
 
@@ -92,4 +93,64 @@ async def get_history_weather_forecast_for_city(
     forecast_data["location"] = forecast_response.get("location", {})
     forecast_data["historical"] = forecast_response.get("historical", {})
 
+    return forecast_data
+
+
+async def get_weather_forecast_statistics_for_city(
+    city_name: str,
+    day: Optional[int],
+    month: Optional[int],
+    min_year: int,
+    max_year: int,
+    number_of_days: int,
+) -> Any:
+    external_api = WeatherStackService()
+    forecast_data = {}
+    average_values = defaultdict(dict)
+
+    mintemp = defaultdict(list)
+    maxtemp = defaultdict(list)
+    avgtemp = defaultdict(list)
+    totalsnow = defaultdict(list)
+    sunhour = defaultdict(list)
+    uv_index = defaultdict(list)
+
+
+    days = []
+    today = datetime.date.today()
+
+    for year_value in range(min_year, max_year+1):
+        base_date = datetime.date(
+            day=day or today.day,
+            month=month or today.month,
+            year=year_value,
+        )
+        days += [str(base_date + datetime.timedelta(days=number)) for number in range(number_of_days)]
+
+    forecast_response = await external_api.fetch_historical_forecast(city=city_name, dates=days)
+
+    forecast_data["location"] = forecast_response.get("location", {})
+    all_forecast_data = forecast_response.get("historical", {})
+
+    for record_date, values in all_forecast_data.items():
+        day_month = record_date[5:]
+        average_values[day_month] = {}
+        mintemp[day_month].append(values["mintemp"])
+        maxtemp[day_month].append(values["maxtemp"])
+        avgtemp[day_month].append(values["avgtemp"])
+        totalsnow[day_month].append(values["totalsnow"])
+        sunhour[day_month].append(values["sunhour"])
+        uv_index[day_month].append(values["uv_index"])
+
+    for record_date in average_values.keys():
+        average_values[record_date] = {
+            "mintemp": min(mintemp[record_date]),
+            "maxtemp": max(maxtemp[record_date]),
+            "avgtemp": round(sum(avgtemp[record_date])/len(avgtemp[record_date]), 2),
+            "totalsnow": round(sum(totalsnow[record_date])/len(totalsnow[record_date]), 2),
+            "sunhour": round(sum(sunhour[record_date])/len(sunhour[record_date]), 2),
+            "uv_index": round(sum(uv_index[record_date])/len(uv_index[record_date]), 2),
+        }
+
+    forecast_data["statistics"] = average_values
     return forecast_data
